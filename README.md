@@ -99,6 +99,44 @@ pnpm install
 3. Follow the SST setup guide for your AWS account
 4. Add your AWS credentials to your environment
 
+### SST Secrets and Domain Configuration
+1. Configure your secrets in `sst.config.ts`:
+
+```bash
+# Required core secrets for the starter kit
+pnpm sst secrets set ClerkPublicKey <your-clerk-public-key>
+pnpm sst secrets set ClerkSecretKey <your-clerk-secret-key>
+pnpm sst secrets set DbUrl <your-turso-db-url>
+pnpm sst secrets set DbToken <your-turso-db-token>
+pnpm sst secrets set StripePublicKey <your-stripe-public-key>
+pnpm sst secrets set StripeSecretKey <your-stripe-secret-key>
+pnpm sst secrets set StripeWebhookSecret <your-stripe-webhook-secret>
+pnpm sst secrets set InngestSigningKey <your-inngest-signing-key>
+pnpm sst secrets set InngestEventKey <your-inngest-event-key>
+
+# The following secrets are only needed if you plan to use the included real estate example application
+# If you're building your own application, you can skip these and remove their references from sst.config.ts
+pnpm sst secrets set GoogleApiKey <your-google-api-key>
+pnpm sst secrets set PublicGoogleApiKey <your-public-google-api-key>
+pnpm sst secrets set GoogleAiKey <your-google-ai-key>
+pnpm sst secrets set HouseApiKey <your-house-api-key>
+pnpm sst secrets set ZipCodeApiKey <your-zipcode-api-key>
+```
+
+2. For production domain setup, update the following in `sst.config.ts`:
+```typescript
+const prodDomain = {
+    name: "your-domain.com", // Replace with your domain
+    dns: undefined, // Set to true if you want SST to manage DNS
+    cert: "arn:aws:acm:us-east-1:your-cert-arn" // Replace with your ACM certificate ARN
+}
+```
+
+3. Update the `NEXT_PUBLIC_APP_URL` in the environment configuration:
+```typescript
+NEXT_PUBLIC_APP_URL: $app.stage === 'prod' ? 'https://your-domain.com' : 'http://localhost:3000'
+```
+
 ### Turso Setup
 1. Install the Turso CLI:
 ```bash
